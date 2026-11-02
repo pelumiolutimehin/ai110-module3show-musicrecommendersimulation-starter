@@ -9,7 +9,26 @@ You will implement the functions in recommender.py:
 - recommend_songs
 """
 
-from recommender import load_songs, recommend_songs
+from src.recommender import load_songs, recommend_songs
+
+def print_recommendations(recommendations) -> None:
+    """Prints each (song, score, explanation) as a numbered block with one reason per line."""
+    width = 50
+    print()
+    print("=" * width)
+    print("TOP RECOMMENDATIONS".center(width))
+    print("=" * width)
+
+    for rank, (song, score, explanation) in enumerate(recommendations, start=1):
+        print()
+        print(f"#{rank}  {song['title']} by {song['artist']}")
+        print(f"    Score: {score:.2f} / 1.00")
+        print("    Reasons:")
+        for reason in explanation.split(", "):
+            print(f"      - {reason}")
+
+    print()
+    print("=" * width)
 
 
 def main() -> None:
@@ -18,9 +37,7 @@ def main() -> None:
     print(f'Loaded songs: {len(songs)}')
 
     # Starter example profile
-    user_prefs = {"genre": "pop", "mood": "happy", "energy": 0.8}
-
-    sample_taste_profile = {"favorite_genre": "lofi",
+    user_prefs = {"favorite_genre": "lofi",
                      "favorite_mood": "relaxed",
                      "target_energy": 0.55,
                      "target_valence": 0.8,
@@ -34,15 +51,8 @@ def main() -> None:
 
     recommendations = recommend_songs(user_prefs, songs, k=5)
 
-    print("\nTop recommendations:\n")
-    for rec in recommendations:
-        # You decide the structure of each returned item.
-        # A common pattern is: (song, score, explanation)
-        song, score, explanation = rec
-        print(f"{song['title']} - Score: {score:.2f}")
-        print(f"Because: {explanation}")
-        print()
-
+    print_recommendations(recommendations)
+    print_recommendations(recommend_songs(chill_lofi_profile, songs, k=5))
 
 if __name__ == "__main__":
     main()

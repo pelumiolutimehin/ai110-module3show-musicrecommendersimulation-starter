@@ -32,6 +32,22 @@ Prompts:
 
 Avoid code here. Pretend you are explaining the idea to a friend who does not program.
 
+**In plain language:**
+
+Imagine a friend who knows your taste and is flipping through a stack of songs. For each song, they ask five questions and give it points for each:
+
+1. **Is the energy about right?** If you want mellow music, a calm song earns nearly full points and a loud, intense one earns few. The goal is *closeness* to what you want, not "more is better."
+2. **Does the mood match?** If you asked for "chill" and the song is "chill," it gets full points. Otherwise it gets none.
+3. **Is the positivity (how happy or upbeat it sounds) about right?** Closeness again.
+4. **Is it your favorite genre?** Full points for a match, none otherwise.
+5. **Is the amount of acoustic sound about right?** Closeness again. Do you like acoustic guitars and pianos, or electronic sounds?
+
+Not every question counts equally. Energy matters most, then mood, then positivity, then genre, and acoustic sound matters least. Mood counts a little more than genre because it describes how a song *feels*, and the catalog is too small for many songs to share a genre.
+
+The friend adds up the points to get a score between 0 and 1, where 1 is a perfect match. Once every song has a score, they line the songs up from highest to lowest and hand you the top five. If two songs tie, the one with the matching mood goes first. Each recommendation also comes with a short note on where its points came from, such as "mood match, energy close," so you can see *why* it was picked.
+
+This is a **content-based** approach: it only looks at the songs' own traits and your stated preferences. It does not use other listeners' habits, so it can't say "people like you also enjoyed this."
+
 ---
 
 ## 4. Data  

@@ -145,15 +145,59 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Sample Recommendation Output
 
-Paste a sample of your recommender's output here as a text block so a reader can see what it produces:
+Output for the chill lofi profile (`favorite_genre=lofi`, `favorite_mood=chill`, `target_energy=0.40`, `target_valence=0.58`, `target_acousticness=0.80`):
 
 ```
-# e.g.:
-# User profile: genre=indie, mood=chill, energy=low
-# Recommendations:
-#   1. ...
-#   2. ...
-#   3. ...
+==================================================
+               TOP RECOMMENDATIONS
+==================================================
+
+#1  Midnight Coding by LoRoom
+    Score: 0.98 / 1.00
+    Reasons:
+      - energy close (+0.29)
+      - mood match (+0.25)
+      - valence close (+0.20)
+      - genre match (+0.15)
+      - acousticness close (+0.09)
+
+#2  Library Rain by Paper Lanterns
+    Score: 0.97 / 1.00
+    Reasons:
+      - energy close (+0.28)
+      - mood match (+0.25)
+      - valence close (+0.20)
+      - genre match (+0.15)
+      - acousticness close (+0.09)
+
+#3  Spacewalk Thoughts by Orbit Bloom
+    Score: 0.79 / 1.00
+    Reasons:
+      - energy close (+0.26)
+      - mood match (+0.25)
+      - valence close (+0.19)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.09)
+
+#4  Focus Flow by LoRoom
+    Score: 0.75 / 1.00
+    Reasons:
+      - energy close (+0.30)
+      - mood mismatch (+0.00)
+      - valence close (+0.20)
+      - genre match (+0.15)
+      - acousticness close (+0.10)
+
+#5  Dusty Porch Swing by Willow Creek Band
+    Score: 0.56 / 1.00
+    Reasons:
+      - energy close (+0.28)
+      - mood mismatch (+0.00)
+      - valence close (+0.18)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.10)
+
+==================================================
 ```
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
