@@ -71,9 +71,36 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     Scores a single song against user preferences.
     Required by recommend_songs() and src/main.py
     """
-    # TODO: Implement scoring logic using your Algorithm Recipe from Phase 2.
-    # Expected return format: (score, reasons)
-    return []
+    scores = {
+        "energy": 1 - abs(song["energy"] - user_prefs["target_energy"]),
+        "mood": 1.0 if song["mood"] == user_prefs["favorite_mood"] else 0.0,
+        "valence": 1 - abs(song["valence"] - user_prefs["target_valence"]),
+        "genre": 1.0 if song["genre"] == user_prefs["favorite_genre"] else 0.0,
+        "acousticness": 1 - abs(song["acousticness"] - user_prefs["target_acousticness"]),
+    }
+    
+    weights = {
+        "energy": 0.30,
+        "mood": 0.25,
+        "valence": 0.20,
+        "genre": 0.15,
+        "acousticness": 0.10,
+    }
+
+    total = 0.0
+    reasons = []
+
+    for feature, weight in weights.items():
+        contribution = weight * scores[feature]
+        total += contribution
+
+        if feature in ("mood", "genre"):
+            label = f"{feature} match" if scores[feature] == 1.0 else f"{feature} mismatch"
+        else:
+            label = f"{feature} {'close' if scores[feature] >= 0.8 else 'far'}"
+        reasons.append(f"{label} (+{contribution:.2f})")
+
+    return total, reasons
 
 def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
     """
