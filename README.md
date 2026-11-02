@@ -11,7 +11,7 @@ Your goal is to:
 - Evaluate what your system gets right and wrong
 - Reflect on how this mirrors real world AI recommenders
 
-Replace this paragraph with your own summary of what your version does.
+My version is a content-based recommender. A user gives a favorite genre, a favorite mood, and target energy, positivity, and acoustic levels. It scores all 20 songs in `data/songs.csv` and returns the top 5, each with reasons like "mood match (+0.25)".
 
 ---
 
@@ -145,7 +145,13 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Sample Recommendation Output
 
-Output for the chill lofi profile (`favorite_genre=lofi`, `favorite_mood=chill`, `target_energy=0.40`, `target_valence=0.58`, `target_acousticness=0.80`):
+Terminal output from `python -m src.main` for each profile (top 5 songs).
+
+### Standard profiles
+
+#### `chill_lofi_profile`
+
+favorite_genre=lofi, favorite_mood=chill, target_energy=0.40, target_valence=0.58, target_acousticness=0.80
 
 ```
 ==================================================
@@ -200,44 +206,330 @@ Output for the chill lofi profile (`favorite_genre=lofi`, `favorite_mood=chill`,
 ==================================================
 ```
 
+#### `intense_rock_profile`
+
+favorite_genre=rock, favorite_mood=intense, target_energy=0.92, target_valence=0.48, target_acousticness=0.10
+
+```
+==================================================
+               TOP RECOMMENDATIONS
+==================================================
+
+#1  Storm Runner by Voltline
+    Score: 1.00 / 1.00
+    Reasons:
+      - energy close (+0.30)
+      - mood match (+0.25)
+      - valence close (+0.20)
+      - genre match (+0.15)
+      - acousticness close (+0.10)
+
+#2  Gym Hero by Max Pulse
+    Score: 0.78 / 1.00
+    Reasons:
+      - energy close (+0.30)
+      - mood match (+0.25)
+      - valence far (+0.14)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.10)
+
+#3  Night Drive Loop by Neon Echo
+    Score: 0.53 / 1.00
+    Reasons:
+      - energy close (+0.25)
+      - mood mismatch (+0.00)
+      - valence close (+0.20)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.09)
+
+#4  Concrete Crown by Verse Alchemy
+    Score: 0.53 / 1.00
+    Reasons:
+      - energy close (+0.26)
+      - mood mismatch (+0.00)
+      - valence close (+0.17)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.10)
+
+#5  Iron Cathedral by Black Meridian
+    Score: 0.53 / 1.00
+    Reasons:
+      - energy close (+0.29)
+      - mood mismatch (+0.00)
+      - valence far (+0.15)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.09)
+
+==================================================
+```
+
+#### `high_energy_pop_profile`
+
+favorite_genre=pop, favorite_mood=happy, target_energy=0.90, target_valence=0.80, target_acousticness=0.10
+
+```
+==================================================
+               TOP RECOMMENDATIONS
+==================================================
+
+#1  Sunrise City by Neon Echo
+    Score: 0.96 / 1.00
+    Reasons:
+      - energy close (+0.28)
+      - mood match (+0.25)
+      - valence close (+0.19)
+      - genre match (+0.15)
+      - acousticness close (+0.09)
+
+#2  Rooftop Lights by Indigo Parade
+    Score: 0.78 / 1.00
+    Reasons:
+      - energy close (+0.26)
+      - mood match (+0.25)
+      - valence close (+0.20)
+      - genre mismatch (+0.00)
+      - acousticness far (+0.08)
+
+#3  Gym Hero by Max Pulse
+    Score: 0.73 / 1.00
+    Reasons:
+      - energy close (+0.29)
+      - mood mismatch (+0.00)
+      - valence close (+0.19)
+      - genre match (+0.15)
+      - acousticness close (+0.10)
+
+#4  Neon Pulse Festival by Drop Theory
+    Score: 0.56 / 1.00
+    Reasons:
+      - energy close (+0.29)
+      - mood mismatch (+0.00)
+      - valence close (+0.18)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.09)
+
+#5  Calle Sol by Los Marea
+    Score: 0.55 / 1.00
+    Reasons:
+      - energy close (+0.29)
+      - mood mismatch (+0.00)
+      - valence close (+0.18)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.08)
+
+==================================================
+```
+
+### Adversarial profiles
+
+#### `sad_but_hyper`
+
+favorite_genre=pop, favorite_mood=sad, target_energy=0.95, target_valence=0.95, target_acousticness=0.05. Mood conflicts with the numeric targets.
+
+```
+==================================================
+               TOP RECOMMENDATIONS
+==================================================
+
+#1  Gym Hero by Max Pulse
+    Score: 0.71 / 1.00
+    Reasons:
+      - energy close (+0.29)
+      - mood mismatch (+0.00)
+      - valence close (+0.16)
+      - genre match (+0.15)
+      - acousticness close (+0.10)
+
+#2  Sunrise City by Neon Echo
+    Score: 0.68 / 1.00
+    Reasons:
+      - energy close (+0.26)
+      - mood mismatch (+0.00)
+      - valence close (+0.18)
+      - genre match (+0.15)
+      - acousticness close (+0.09)
+
+#3  Neon Pulse Festival by Drop Theory
+    Score: 0.58 / 1.00
+    Reasons:
+      - energy close (+0.30)
+      - mood mismatch (+0.00)
+      - valence close (+0.19)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.10)
+
+#4  Calle Sol by Los Marea
+    Score: 0.54 / 1.00
+    Reasons:
+      - energy close (+0.27)
+      - mood mismatch (+0.00)
+      - valence close (+0.19)
+      - genre mismatch (+0.00)
+      - acousticness far (+0.08)
+
+#5  Delta Midnight by Old Man Hayes
+    Score: 0.51 / 1.00
+    Reasons:
+      - energy far (+0.16)
+      - mood match (+0.25)
+      - valence far (+0.07)
+      - genre mismatch (+0.00)
+      - acousticness far (+0.03)
+
+==================================================
+```
+
+#### `ghost_labels`
+
+favorite_genre=k-pop, favorite_mood=nostalgia, target_energy=0.60, target_valence=0.60, target_acousticness=0.50. Neither label exists in the catalog.
+
+```
+==================================================
+               TOP RECOMMENDATIONS
+==================================================
+
+#1  Velvet Hours by Sade Monroe
+    Score: 0.55 / 1.00
+    Reasons:
+      - energy close (+0.28)
+      - mood mismatch (+0.00)
+      - valence close (+0.19)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.08)
+
+#2  Island Breeze by Rootsy Tide
+    Score: 0.54 / 1.00
+    Reasons:
+      - energy close (+0.29)
+      - mood mismatch (+0.00)
+      - valence far (+0.16)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.10)
+
+#3  Midnight Coding by LoRoom
+    Score: 0.52 / 1.00
+    Reasons:
+      - energy close (+0.25)
+      - mood mismatch (+0.00)
+      - valence close (+0.19)
+      - genre mismatch (+0.00)
+      - acousticness far (+0.08)
+
+#4  Focus Flow by LoRoom
+    Score: 0.51 / 1.00
+    Reasons:
+      - energy close (+0.24)
+      - mood mismatch (+0.00)
+      - valence close (+0.20)
+      - genre mismatch (+0.00)
+      - acousticness far (+0.07)
+
+#5  Dusty Porch Swing by Willow Creek Band
+    Score: 0.51 / 1.00
+    Reasons:
+      - energy close (+0.26)
+      - mood mismatch (+0.00)
+      - valence close (+0.18)
+      - genre mismatch (+0.00)
+      - acousticness far (+0.07)
+
+==================================================
+```
+
+#### `label_near_miss`
+
+favorite_genre="Lo-Fi ", favorite_mood=relaxed, target_energy=0.40, target_valence=0.58, target_acousticness=0.80. Near-miss labels (the catalog uses `lofi`).
+
+```
+==================================================
+               TOP RECOMMENDATIONS
+==================================================
+
+#1  Coffee Shop Stories by Slow Stereo
+    Score: 0.81 / 1.00
+    Reasons:
+      - energy close (+0.29)
+      - mood match (+0.25)
+      - valence close (+0.17)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.09)
+
+#2  Focus Flow by LoRoom
+    Score: 0.60 / 1.00
+    Reasons:
+      - energy close (+0.30)
+      - mood mismatch (+0.00)
+      - valence close (+0.20)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.10)
+
+#3  Midnight Coding by LoRoom
+    Score: 0.58 / 1.00
+    Reasons:
+      - energy close (+0.29)
+      - mood mismatch (+0.00)
+      - valence close (+0.20)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.09)
+
+#4  Library Rain by Paper Lanterns
+    Score: 0.57 / 1.00
+    Reasons:
+      - energy close (+0.28)
+      - mood mismatch (+0.00)
+      - valence close (+0.20)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.09)
+
+#5  Dusty Porch Swing by Willow Creek Band
+    Score: 0.56 / 1.00
+    Reasons:
+      - energy close (+0.28)
+      - mood mismatch (+0.00)
+      - valence close (+0.18)
+      - genre mismatch (+0.00)
+      - acousticness close (+0.10)
+
+==================================================
+```
+
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
 
 ---
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
+- **Removed the mood check.** The #1 song for the chill lofi profile changed from Midnight Coding to Focus Flow, a "focused" song, and scores topped out at 0.75. I restored it afterward.
+- **Different types of users.** Chill lofi, intense rock, and high-energy pop each got sensible, different lists (see the sample output above).
+- **Stress-test profiles.**
+  - `sad_but_hyper` got upbeat pop, because energy outvoted the "sad" mood.
+  - `ghost_labels` got a near-random list scored 0.55 to 0.51.
+  - `label_near_miss` lost every genre match to a stray capital letter and space.
+- **Self-match check.** Each of the 20 songs ranks #1 for a profile built from its own traits.
 
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+I did not try changing the weights or adding tempo.
 
 ---
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
+- It only works on a tiny catalog: 20 songs, and 14 of the 17 genres have just one.
+- Genre and mood are exact matches, so "relaxed" gets no credit for "chill" and typos break matches.
+- It ignores tempo, danceability, lyrics, and language.
+- It assumes one taste per user.
+- Pop songs like Gym Hero can show up for a "happy pop" user because genre and energy outweigh a mismatched mood.
 
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
+See the [model card](model_card.md) for more.
 
 ---
 
 ## Reflection
 
-Read and complete `model_card.md`:
-
 [**Model Card**](model_card.md)
 
-Write 1 to 2 paragraphs here about what you learned:
+A recommender turns data into predictions by comparing a user's stated taste to each item's traits, scoring each trait, and adding the scores up. Mine only adds five numbers, yet the results felt like real recommendations, especially with the reasons shown next to each song.
 
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
+Bias shows up in small choices. Genre and mood are all-or-nothing labels worth 40% of the score, so users whose tastes match the catalog are served better than everyone else. One label can change the top pick. In a bigger system, the same kind of choice would shape what millions of people see.
 
 
 
