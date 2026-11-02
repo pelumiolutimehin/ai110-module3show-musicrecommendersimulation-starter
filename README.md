@@ -17,17 +17,94 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
-Explain your design in plain language.
+### How real-world recommendations work
 
-Some prompts to answer:
+Platforms like Spotify and YouTube predict what you'll like next with a pipeline: they narrow millions of items to a few hundred candidates, score each one with a model, then re-rank the results for variety. They learn from two kinds of data. **Collaborative filtering** uses other users' behavior ("people who listen like you also liked X"). **Content-based filtering** uses the attributes of the songs themselves (tempo, energy, mood). Collaborative filtering is good at surprising discoveries but struggles with brand-new songs. Content-based filtering handles new songs well but tends to keep recommending more of the same.
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+### What my version prioritizes
 
-You can include a simple diagram or bullet list if helpful.
+My simulation is **content-based**, because the dataset has only song attributes and no listening history from other users. It prioritizes **closeness to the user's taste**, not "higher is better": a user who wants calm music should get songs with low energy, not high energy. Mood counts for slightly more than genre. Mood describes how a song feels, and the catalog is too small for many songs to share a genre.
+
+### Features
+
+**`Song` features** (from `songs.csv`):
+
+- `genre`
+- `mood`
+- `energy` (0 to 1)
+- `valence` (0 to 1, how positive the song sounds)
+- `acousticness` (0 to 1)
+
+Left out on purpose: `tempo_bpm` and `danceability` mostly repeat what energy already shows, and `id`, `title`, and `artist` are only labels.
+
+**`UserProfile` features** (the user's targets):
+
+- `favorite_genre`
+- `favorite_mood`
+- `target_energy`
+- `target_valence`
+- `target_acousticness`
+
+### Scoring Rule (one song)
+
+Each numeric feature gets a closeness score: `1 - |song value - user target|`, so a perfect match scores 1. Genre and mood score 1 for a match and 0 otherwise. The total is a weighted sum:
+
+| Feature | Weight |
+|---|---|
+| energy | 0.30 |
+| mood | 0.25 |
+| valence | 0.20 |
+| genre | 0.15 |
+| acousticness | 0.10 |
+
+### Ranking Rule (list of songs)
+
+The recommender scores every song in the catalog, sorts them from highest to lowest score, and returns the top K (for example, 5).
+
+### Data Flow
+
+```
+INPUT                      PROCESS (loop over every song)           OUTPUT
+-----                      ------------------------------           ------
+UserProfile  ─┐            for each song in the catalog:             sort by score,
+  genre       │              score_song(user, song)                  highest first
+  mood        ├──────────►     categorical: mood, genre (1 or 0)       │
+  energy      │                numeric: 1 - |song - target|            ▼
+  valence     │                weighted sum -> total score          keep top K
+  acousticness│              append (song, score, reasons)             │
+songs.csv ────┘                                                        ▼
+  load_songs() -> list of songs                                    K recommendations
+k (e.g. 5) ────────────────────────────────────────────────────────► (title, score, why)
+```
+
+| Stage | Function | Job |
+|---|---|---|
+| Input | `load_songs(path)` and `UserProfile` | Read the CSV and convert numeric columns to floats |
+| Process | `score_song(user, song)` | One song in, one score and a per-feature breakdown out |
+| Output | `recommend_songs(user, songs, k)` | Run the loop, sort once after it finishes, return the first K |
+
+### Algorithm Recipe
+
+1. **Load** every song from `data/songs.csv`.
+2. **For each song**, compute five feature scores, each between 0 and 1:
+   - `mood_score` = 1 if `song.mood == favorite_mood`, else 0
+   - `genre_score` = 1 if `song.genre == favorite_genre`, else 0
+   - `energy_score` = `1 - |song.energy - target_energy|`
+   - `valence_score` = `1 - |song.valence - target_valence|`
+   - `acousticness_score` = `1 - |song.acousticness - target_acousticness|`
+3. **Combine** them into one total with the weights in the table above:
+   `total = 0.30*energy + 0.25*mood + 0.20*valence + 0.15*genre + 0.10*acousticness`
+   The weights sum to 1.0, so the total is also between 0 and 1.
+4. **Explain**: keep each feature's contribution so every result can say why it ranked where it did (for example, "mood match, energy close").
+5. **Rank**: sort all songs by total score, highest first. Break ties by the higher mood score, then by CSV order.
+6. **Return** the top K songs with their scores and explanations.
+
+### Expected Biases
+
+- **Exact-match labels:** genre and mood are all-or-nothing, so a near-miss like "relaxed" vs "chill" gets zero credit.
+- **Genre in a small catalog:** if the user's genre has only a few songs, a genre match can outrank better mood and energy matches.
+- **Compressed numeric scores:** `1 - |diff|` keeps most songs between 0.6 and 0.95, so the numeric features separate songs less than their weights suggest.
+- **One taste per user:** a single target per feature averages out users who like very different kinds of songs.
 
 ---
 

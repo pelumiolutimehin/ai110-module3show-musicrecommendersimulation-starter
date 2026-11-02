@@ -18,6 +18,18 @@ def main() -> None:
     # Starter example profile
     user_prefs = {"genre": "pop", "mood": "happy", "energy": 0.8}
 
+    sample_taste_profile = {"favorite_genre": "lofi",
+                     "favorite_mood": "relaxed",
+                     "target_energy": 0.55,
+                     "target_valence": 0.8,
+                     "target_acousticness": 0.5}
+
+    chill_lofi_profile = {"favorite_genre": "lofi", "favorite_mood": "chill",
+                 "target_energy": 0.40, "target_valence": 0.58, "target_acousticness": 0.80}
+    intense_rock_profile = {"favorite_genre": "rock", "favorite_mood": "intense",
+                 "target_energy": 0.92, "target_valence": 0.48, "target_acousticness": 0.10}
+
+
     recommendations = recommend_songs(user_prefs, songs, k=5)
 
     print("\nTop recommendations:\n")
